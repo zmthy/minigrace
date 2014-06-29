@@ -136,18 +136,30 @@ type Point = type {
     -(other:Point) -> Point
     +(other:Point) -> Point
     length -> Number
-    ==(other:Point) -> Boolean
+    ==(other:Object) -> Boolean
+}
+
+type Binding = type {
+    key -> Object
+    value -> Object
+    asString -> String
+    ==(other:Object) -> Boolean
 }
 
 class point2D.x(x')y(y') {
     def x is readable = x'
     def y is readable = y'
-    method asString {"({x}@{y})"}
+    method asString { "({x}@{y})" }
+    method asDebugString { self.asString }
     method distanceTo(other:XandY) { (((x - other.x)^2) + ((y - other.y)^2))^(0.5) }
     method -(other:XandY) {point(x - other.x, y - other.y)}
     method +(other:XandY) {point(x + other.x, y + other.y)}
     method length {((x^2) + (y^2))^0.5}
-    method ==(other:XandY) {(x == other.x) && (y == other.y)}
+    method ==(other) {
+        match (other)
+            case {o:Point -> (x == o.x) && (y == o.y)}
+            case {_ -> false}
+    }
 }
 
 method point(x,y) {
@@ -160,6 +172,11 @@ class aBinding.key(k)value(v) {
     method asString { "{k}::{v}" }
     method asDebugString { asString }
     method hashcode { (k.hashcode * 1021) + v.hashcode }
+    method ==(other) {
+        match (other)
+            case {o:Binding -> (k == other.key) && (v == other.value)}
+            case {_ -> false }
+    }
 }
 
 method bind(k,v) {
