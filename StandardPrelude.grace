@@ -166,7 +166,7 @@ method point(x,y) {
     return point2D.x(x)y(y)
 }
 
-class aBinding.key(k)value(v) {
+class binding.key(k)value(v) {
     method key {k}
     method value {v}
     method asString { "{k}::{v}" }
@@ -180,7 +180,7 @@ class aBinding.key(k)value(v) {
 }
 
 method bind(k,v) {
-    return aBinding.key(k)value(v)
+    return binding.key(k)value(v)
 }
 
 def _standardPrelude = self
