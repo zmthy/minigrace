@@ -414,6 +414,21 @@ int integerfromAny(Object p) {
     int i = atoi(c);
     return i;
 }
+
+Object _bindingClass = NULL;
+Object grace_bindingClass() {
+    if (_bindingClass == NULL)
+        _bindingClass = callmethod(prelude, "binding", 0, NULL, NULL);
+    return _bindingClass;
+}
+
+Object _point2DClass = NULL;
+Object grace_point2DClass() {
+    if (_point2DClass == NULL)
+        _point2DClass = callmethod(prelude, "point2D", 0, NULL, NULL);
+    return _point2DClass;
+}
+
 Object gracebecome(Object subObject, Object superObject) {
     struct UserObject *sub = (struct UserObject *)subObject;
     struct UserObject *sup = (struct UserObject *)superObject;
@@ -491,11 +506,10 @@ Object Object_bind(Object self, int nparts, int *argcv,
         gracedie("binary operator :: requires an argument");
     Object other = args[0];
     Object params[2];
-    int partcv[1];
+    int partcv[] = {1, 1};
     params[0] = self;
     params[1] = other;
-    partcv[0] = 2;
-    return callmethodflags(prelude, "bind", 1, partcv, params, CFLAG_SELF);
+    return callmethod(grace_bindingClass(), "key()value", 2, partcv, params);
 }
 
 Object Object_concat(Object receiver, int nparts, int *argcv,
@@ -915,15 +929,14 @@ Object alloc_Exception(char *name, Object parent) {
 Object Float64_Point(Object self, int nparts, int *argcv,
                      Object *args, int flags) {
     if (nparts < 1 || (nparts >= 1 && argcv[0] < 1))
-    gracedie("binary operator @ requires an argument");
+    gracedie("binary operator @ requires a single argument");
     Object other = args[0];
     assertClass(other, Number);
     Object params[2];
-    int partcv[1];
+    int partcv[] = {1, 1};
     params[0] = self;
     params[1] = other;
-    partcv[0] = 2;
-    return callmethodflags(prelude, "point", 1, partcv, params, CFLAG_SELF);
+    return callmethod(grace_point2DClass(), "x()y", 2, partcv, params);
 }
 
 Object String_Equals(Object self, int nparts, int *argcv,
