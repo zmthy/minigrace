@@ -138,10 +138,17 @@ GraceString.prototype = {
             if (this._value.charCodeAt(0) == 46) return GraceTrue; else return GraceFalse;
         },
         "startsWithDigit": function(argcv) {
-            if ((this._value.charCodeAt(0) >= 48)&&(this._value.charCodeAt(0) <= 57)) return GraceTrue; else return GraceFalse;
+            if ((this._value.charCodeAt(0) >= 48)&&(this._value.charCodeAt(0) <= 57)) return GraceTrue;
+            else return GraceFalse;
         },
         "asDebugString": function(argcv) {
             return new GraceString("\"" + this._value + "\"");
+        },
+        "startsWithLetter": function(argcv) {
+            var c = this._value.charCodeAt(0);
+            if (((c >= 97) && (c <= 122)) || ((c >= 65) && (c <= 90)))
+                return GraceTrue;
+            else return GraceFalse;
         },
         "::": function(argcv, other) {
             return callmethod(GraceBindingClass(), "key()value", [1, 1], this, other);
